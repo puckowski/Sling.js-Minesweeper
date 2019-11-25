@@ -2,6 +2,8 @@
 
 Minesweeper built using Sling.js framework.
 
+![Sling.js Minesweeper](https://github.com/puckowski/Sling.js-Minesweeper/blob/master/docs/images/SlingMinesweeper.png "Minesweeper image")
+
 ## Building
 
 Run ```npm run buildProd``` or ```npm run build``` after ```npm install```.
