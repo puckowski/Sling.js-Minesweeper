@@ -1,0 +1,90 @@
+.animEnter {
+    animation: fade-in 0.5s;
+}
+
+@keyframes fade-in {
+    from { 
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.animExit {
+    animation: fade-out 0.5s;
+}
+
+@keyframes fade-out {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+body {
+    margin: 0px;
+    background: linear-gradient(45deg, rgba(0,0,0,1) 0%, rgba(131,9,9,1) 50%, rgba(0,0,0,1) 100%);
+    font-family: Arial;
+}
+
+.content {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+}
+
+.navbar {
+    color: red;
+    text-align: center;
+    padding-left: 1rem;
+    font-size: 40px;
+    font-style: normal;
+    font-variant: normal;
+    font-weight: 700;
+    line-height: 60px;
+    margin-block-end: 0px;
+}
+
+.scoreboard {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    width: 100%;
+    text-align: center;
+    color: red;
+}
+
+.table-minesweeper {
+    border-collapse: separate;
+    min-width: 680px;
+}
+
+.table-minesweeper tr td {
+    background-clip: padding-box;
+    background-color: rgb(139, 0, 0);
+    color: black;
+    border: 1px solid red;
+    border-radius: 0.333rem;
+    width: 2rem;
+    height: 2rem;
+    text-align: center;
+    transition: background-color 1s ease;
+}
+
+.table-minesweeper tr td.clicked {
+    background: #333333;
+    color: white;
+}
+
+.table-minesweeper tr td.mine {
+    background: red;
+    color: white;
+    border-radius: 1rem 1rem 1rem 1rem;
+}
