@@ -1,6 +1,6 @@
 # Sling.js Minesweeper 
 
-Minesweeper built using Sling.js framework.
+Minesweeper built using Sling.js framework ([Sling.js on GitHub](https://github.com/puckowski/Sling.js)).
 
 ![Sling.js Minesweeper](https://github.com/puckowski/Sling.js-Minesweeper/blob/master/docs/images/SlingMinesweeper.png "Minesweeper image")
 
