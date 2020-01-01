@@ -14,6 +14,3 @@ s.mount('divScoreboard', compScoreboard);
 
 let compGameBoard = new GameBoardComponent();
 s.mount('gameBoard', compGameBoard);
-
-//s.autoUpdate('divScoreboard', compScoreboard);
-//s.autoUpdate('gameBoard', compGameBoard);
