@@ -7,7 +7,8 @@ class NavbarComponent {
     view() {
         return s.markup('div', {
             attrs: {
-                style: 'width:100%;height:60px;background-color:rgba(0,0,0,0.6);'
+                style: 'width:100%;height:60px;background-color:rgba(0,0,0,0.6);',
+                id: 'divNavbar'
             },
             children: [
                 s.markup('h3', {

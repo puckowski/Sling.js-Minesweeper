@@ -85,7 +85,7 @@ class GameBoardComponent {
                             if (transitionStep < MAX_TRANSITION_STEPS) {
                                 transitionStep++;
 
-                                setTimeout(function (i, j) {
+                                s.pureSetTimeout(function (i, j) {
                                     this.clickCell(this, this.mineMap[i][j], null, transitionDelay, transitionStep);
                                 }.bind(this, i, j), transitionDelay);
 
@@ -97,6 +97,12 @@ class GameBoardComponent {
                             }
                         }
                     }
+                }
+
+                if (transitionStep === MAX_TRANSITION_STEPS) {
+                    setTimeout(function() {
+                        // This will trigger change detection
+                    }, (MAX_TRANSITION_DELAY_MILLIS * MAX_TRANSITION_STEPS) + 1);
                 }
             }
 
@@ -132,6 +138,10 @@ class GameBoardComponent {
         this.minesVisible = false;
         this.victory = false;
         this.createMineMap();
+
+        document.querySelectorAll('#gameBoard td').forEach(node => {
+            node.textContent = '';
+        });
 
         let state = s.getState();
         state.resetState();
