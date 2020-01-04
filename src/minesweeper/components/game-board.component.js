@@ -1,8 +1,8 @@
 const DEFAULT_MINE_COUNT = 40;
 const DEFAULT_BOARD_WIDTH = 20;
-const MAX_TRANSITION_DELAY_MILLIS = 200;
-const MAX_TRANSITION_STEPS = 4;
-const DEFAULT_TRANSITION_INCREMENT = 50;
+const DEFAULT_TRANSITION_INCREMENT = 300;
+const MAX_TRANSITION_DELAY = 900;
+const MAX_MINE_BATCH_COUNT = 10;
 
 class GameBoardComponent {
 
@@ -24,7 +24,7 @@ class GameBoardComponent {
             this.mineMap[i] = new Array(DEFAULT_BOARD_WIDTH);
 
             for (n = 0; n < DEFAULT_BOARD_WIDTH; ++n) {
-                this.mineMap[i][n] = { mine: 0, value: null, clicked: false, row: i, col: n };
+                this.mineMap[i][n] = { mine: 0, value: '', clicked: false, row: i, col: n };
             }
         }
 
@@ -47,8 +47,10 @@ class GameBoardComponent {
         this.minesVisible = true;
     }
 
-    clickCell(context, data, mouseEvent, transitionDelay = DEFAULT_TRANSITION_INCREMENT, transitionStep = 0) {
+    clickCell(context, data) {
         if (this.victory === true || this.minesVisible === true) {
+            return;
+        } else if (data.clicked === true) {
             return;
         }
 
@@ -78,32 +80,46 @@ class GameBoardComponent {
             }
             data.value = mineCount;
 
+            let mineUpdateBatchArr = [];
+            let mineUpdateBatch = [];
+            let batchCount = 0;
+
             if (mineCount === 0) {
                 for (i = Math.max(cellRow - 1, 0); i <= Math.min(cellRow + 1, DEFAULT_BOARD_WIDTH - 1); i++) {
                     for (j = Math.max(cellCol - 1, 0); j <= Math.min(cellCol + 1, DEFAULT_BOARD_WIDTH - 1); j++) {
-                        if (this.mineMap[i][j].value === null) {
-                            if (transitionStep < MAX_TRANSITION_STEPS) {
-                                transitionStep++;
+                        if (this.mineMap[i][j].value === '') {
+                            mineUpdateBatch.push(this.mineMap[i][j]);
 
-                                s.pureSetTimeout(function (i, j) {
-                                    this.clickCell(this, this.mineMap[i][j], null, transitionDelay, transitionStep);
-                                }.bind(this, i, j), transitionDelay);
+                            batchCount++;
 
-                                if (transitionDelay < MAX_TRANSITION_DELAY_MILLIS) {
-                                    transitionDelay += DEFAULT_TRANSITION_INCREMENT;
-                                }
-                            } else {
-                                this.clickCell(this, this.mineMap[i][j], null);
+                            if (batchCount === MAX_MINE_BATCH_COUNT) {
+                                batchCount = 0;
+
+                                mineUpdateBatchArr.push(mineUpdateBatch);
+                                mineUpdateBatch = [];
                             }
                         }
                     }
                 }
 
-                if (transitionStep === MAX_TRANSITION_STEPS) {
-                    setTimeout(function() {
-                        // This will trigger change detection
-                    }, (MAX_TRANSITION_DELAY_MILLIS * MAX_TRANSITION_STEPS) + 1);
-                }
+                mineUpdateBatchArr.push(mineUpdateBatch);
+
+                let transitionDelay = 0;
+                mineUpdateBatchArr.forEach(mineUpdateBatch => {
+                    s.detachedSetTimeout(function () {
+                        mineUpdateBatch.forEach(mine => {
+                            this.clickCell(this, mine);
+                        });
+
+                        s.detectChanges();
+                    }.bind(this), transitionDelay);
+
+                    transitionDelay += DEFAULT_TRANSITION_INCREMENT;
+
+                    if (transitionDelay > MAX_TRANSITION_DELAY) {
+                        transitionDelay = MAX_TRANSITION_DELAY;
+                    }
+                });
             }
 
             this.checkLevelCompletion();
@@ -139,10 +155,6 @@ class GameBoardComponent {
         this.victory = false;
         this.createMineMap();
 
-        document.querySelectorAll('#gameBoard td').forEach(node => {
-            node.textContent = '';
-        });
-
         let state = s.getState();
         state.resetState();
         state.setScore(0);
@@ -176,7 +188,7 @@ class GameBoardComponent {
                                                 onclick: this.clickCell.bind(this, this, col)
                                             },
                                             children: [
-                                                ...(col.value !== null ? [s.textNode(col.value)] : []),
+                                                s.textNode(col.value)
                                             ]
                                         })
                                     )
