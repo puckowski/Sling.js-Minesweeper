@@ -39,7 +39,7 @@
     "eslint-plugin-react": "^7.16.0",
     "file-loader": "^4.3.0",
     "http-server": "^0.11.1",
-    "terser": "^4.4.0",
+    "terser": "^4.8.1",
     "webpack": "^4.41.2",
     "webpack-cli": "^3.3.10",
     "webpack-dev-server": "^3.9.0"
